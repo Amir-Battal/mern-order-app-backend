@@ -26,17 +26,15 @@ type CheckoutSessionRequest = {
 
 
 const stripeWebhookHandler = async (req: Request, res: Response) => {
-    
     let event;
-    
+
     try {
         const sig = req.headers["stripe-signature"];
         event = STRIPE.webhooks.constructEvent(
-            req.body, 
-            sig as string, 
+            req.body,
+            sig as string,
             STRIPE_ENDPOINT_SECRET
         );
-
     } catch (error: any) {
         console.log(error);
         return res.status(400).send(`Webhook error: ${error.message}`);
@@ -48,10 +46,10 @@ const stripeWebhookHandler = async (req: Request, res: Response) => {
         if (!order) {
             return res.status(404).json({ message: "Order not found" });
         }
-
+    
         order.totalAmount = event.data.object.amount_total;
         order.status = "paid";
-
+    
         await order.save();
     }
 
@@ -63,9 +61,11 @@ const stripeWebhookHandler = async (req: Request, res: Response) => {
 const createCheckoutSession = async (req: Request, res: Response) => {
     try {
         const checkoutSessionRequest: CheckoutSessionRequest = req.body;
-
-        const restaurant = await Restaurant.findById(checkoutSessionRequest.restaurantId);
-
+    
+        const restaurant = await Restaurant.findById(
+            checkoutSessionRequest.restaurantId
+        );
+    
         if (!restaurant) {
             throw new Error("Restaurant not found");
         }
@@ -80,24 +80,23 @@ const createCheckoutSession = async (req: Request, res: Response) => {
         });
 
         const lineItems = createLineItems(
-            checkoutSessionRequest, 
+            checkoutSessionRequest,
             restaurant.menuItems
         );
 
         const session = await createSession(
-            lineItems, 
-            newOrder._id.toString(), 
-            restaurant.deliveryPrice, 
+            lineItems,
+            newOrder._id.toString(),
+            restaurant.deliveryPrice,
             restaurant._id.toString()
         );
-
+    
         if (!session.url) {
             return res.status(500).json({ message: "Error creating stripe session" });
         }
 
         await newOrder.save();
         res.json({ url: session.url });
-
     } catch (error: any) {
         console.log(error);
         res.status(500).json({ message: error.raw.message });
