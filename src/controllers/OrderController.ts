@@ -134,9 +134,9 @@ const createLineItems = (
 };
 
 const createSession = async (
-    lineItems: Stripe.Checkout.SessionCreateParams.LineItem[], 
-    orderId: string, 
-    deliveryPrice: number, 
+    lineItems: Stripe.Checkout.SessionCreateParams.LineItem[],
+    orderId: string,
+    deliveryPrice: number,
     restaurantId: string
 ) => {
     const sessionData = await STRIPE.checkout.sessions.create({
@@ -148,7 +148,7 @@ const createSession = async (
                     type: "fixed_amount",
                     fixed_amount: {
                         amount: deliveryPrice,
-                        currency: "gbp"
+                        currency: "gbp",
                     },
                 },
             },
@@ -159,7 +159,7 @@ const createSession = async (
             restaurantId,
         },
         success_url: `${FRONTEND_URL}/order-status?success=true`,
-        cancel_url: `${FRONTEND_URL}/detail/${restaurantId}?cancelled=true`
+        cancel_url: `${FRONTEND_URL}/detail/${restaurantId}?cancelled=true`,
     });
 
     return sessionData;
