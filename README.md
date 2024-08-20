@@ -23,8 +23,9 @@
 
 <p align="center">
   <a href="#key-features">Key Features</a> •
+  <a href="#api-reference">API Reference</a> •
+  <a href="#run-locally">Run Locally</a> •
   <a href="#how-to-use">How To Use</a> •
-  <a href="#download">Download</a> •
   <a href="#credits">Credits</a> •
   <a href="#license">License</a>
 </p>
