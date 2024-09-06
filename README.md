@@ -331,7 +331,7 @@ Start the app
   npm run dev
 ```
 
-NOTE: Run Frontend also.
+NOTE: Run <a href="https://github.com/Amir-Battal/mern-order-app-frontend">Frontend</a> also.
 
 
 
